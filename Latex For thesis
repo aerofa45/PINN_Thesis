@@ -178,7 +178,7 @@ The results demonstrate that PINNs significantly outperform traditional NNs in s
 \section*{Codes}
 
 \begin{enumerate}
-    \item https://colab.research.google.com/drive/1xmV7On5GF3lf4ece_wARHPKYM_s3Wg31
+    \item https://github.com/aerofa45/PINN_Thesis
 
 \end{enumerate}
 
