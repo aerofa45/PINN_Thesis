@@ -176,7 +176,7 @@ The NN solution in Figure~\ref{fig:nn_solution} shows significant deviations fro
 \section{Conclusion}
 The results demonstrate that PINNs significantly outperform traditional NNs in solving PDEs like the Heat Equation and Burger's Equation. This highlights their potential for applications in scientific computing, where physical laws play a crucial role.
 
-\section*{Codes}
+\section*{Link to my Codes}
 
 \begin{enumerate}
     \noindent\href{https://github.com/aerofa45/PINN_Thesis}{\texttt{https://github.com/aerofa45/PINN\_Thesis}}
