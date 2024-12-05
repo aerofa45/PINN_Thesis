@@ -1,0 +1,196 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath, amssymb, graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    stringstyle=\color{green},
+    commentstyle=\color{gray},
+    breaklines=true,
+    showstringspaces=false,
+}
+
+\title{A Comprehensive Comparison Between Neural Networks and Physics-Informed Neural Networks for Solving PDEs}
+\author{}
+\date{\today}
+
+
+\vspace{2cm} % Adds some space before the next section
+\begin{document}
+\maketitle
+
+
+\begin{center}
+    
+    
+    \textbf{Submitted to:} \\
+    [Dr.William G Harter, Department of Physics, UARK] \\[0.5cm]
+    
+    \textbf{Submitted by:} \\
+    [Aman Kumar Chaudhary] \\ 
+    [Senior Physics Student UARK] \\
+    [ID: 010885606]
+\end{center}
+
+\vspace{1cm}
+ 
+
+
+
+
+ 
+
+
+\section*{Abstract}
+This article explores the application of Neural Networks (NNs) and Physics-Informed Neural Networks (PINNs) to solve Partial Differential Equations (PDEs). Two PDEs, the Heat Equation and Burger's Equation, are considered. Through contour plots and results analysis, the superiority of PINNs over traditional NNs is demonstrated.
+
+\vspace{1cm}
+
+\section{Introduction}
+Neural Networks (NNs) are a popular machine learning tool capable of approximating complex functions. However, traditional NNs lack the ability to incorporate physical constraints, making them less effective for solving PDEs. Physics-Informed Neural Networks (PINNs) overcome this limitation by embedding the governing equations as constraints into the training process.
+
+\section{Neural Networks and Physics-Informed Neural Networks}
+
+\subsection{Neural Networks}
+A neural network is a computational model that uses layers of interconnected nodes (neurons) to approximate functions. NNs learn from data by minimizing a loss function, typically based on the error between predictions and actual data.
+
+\subsection{Physics-Informed Neural Networks}
+PINNs extend NNs by including a physics-based loss term that enforces the governing PDEs. This allows PINNs to generate solutions that adhere to the underlying physical laws, even with minimal or noisy data.
+
+
+
+\section{Related Works}
+\subsection{Advantages and Limitations of PINNs in Numerical Calculation Problems}
+Physics-Informed Neural Networks (PINNs) integrate traditional physics theories with modern machine learning techniques. They use a deep learning framework to solve physical problems, particularly partial differential equations (PDEs). The main advantages of PINNs include:
+
+\begin{itemize}
+    \item \textbf{Flexibility and Computational Efficiency:} PINNs avoid the need for grid processing, making them ideal for complex-shaped or high-dimensional physical scenes.
+    \item \textbf{Adaptability and Scalability:} PINNs are better suited than traditional numerical methods for scenarios that do not require precise meshing, especially for high-dimensional PDEs where meshing is computationally expensive and intractable.
+    \item \textbf{Reverse Engineering Applications:} PINNs excel in parameter estimation and model correction. By adjusting network structure and weights, they can estimate unknown parameters directly, even with scarce data.
+\end{itemize}
+
+Despite their strengths, PINNs face several challenges:
+\begin{itemize}
+    \item \textbf{High Training Costs:} PINNs require significant computational resources for training, especially for complex problems.
+    \item \textbf{Convergence Issues:} Efficient training demands careful balancing of loss components using trade-off parameters \( \lambda \). Improper balancing can lead to overemphasis on certain parts of the equation, affecting learning and prediction accuracy.
+\end{itemize}
+
+\subsubsection{Example: Wave Equation}
+Consider the wave equation:
+\[
+\frac{\partial^2 u(x, t)}{\partial t^2} - c^2 \frac{\partial^2 u(x, t)}{\partial x^2} = 0,
+\]
+with the following initial and boundary conditions:
+\[
+u(x, t=0) = f(x), \quad \frac{\partial u}{\partial t}(x, t=0) = g(x),
+\]
+\[
+u(x=0, t) = u(x=l, t) = 0.
+\]
+
+The total loss function for a NN solving this equation is:
+\[
+L_{\text{PDE}} = \frac{1}{M} \sum_{i=1}^{M} \left( \hat{u}_{tt}(x_i, t_i) - c^2 \hat{u}_{xx}(x_i, t_i) \right)^2,
+\]
+\[
+L_{\text{Initial}} = \frac{1}{P} \sum_{j=1}^{P} \left[ \left( \hat{u}(x_j, 0) - f(x_j) \right)^2 + \left( \frac{\partial \hat{u}}{\partial t}(x_j, 0) - g(x_j) \right)^2 \right],
+\]
+\[
+L_{\text{Boundary}} = \frac{1}{Q} \sum_{k=1}^{Q} \left[ \hat{u}(0, t_k)^2 + \hat{u}(l, t_k)^2 \right],
+\]
+\[
+\text{Total Loss} = L_{\text{PDE}} + L_{\text{Initial}} + L_{\text{Boundary}}.
+\]
+
+The appearance of multiple derivatives of the neural network function \( \hat{u} \) can cause data correlations, destabilizing the training process and contributing to poor convergence in equations' solution.
+
+\subsection{Neural Partial Differential Equations (Neural PDEs)}
+Neural networks offer attractive approximation capabilities for highly nonlinear functions. Their compositional nature contrasts with the more conventional additive form of trial functions in linear function spaces in which PDE solution approximations are constructed by Galerkin, collocation or finite volume methods. Their computational parametrization through statistical learning and large-scale optimization methods using modern hardware, software systems and algorithms are making them increasingly
+amenable for solving nonlinear and high-dimensional PDEs.
+
+\subsubsection{Neural PDE Solution}
+The output between layers is computed as:
+\[
+h(t+1) = \text{PDESolve}(h(t); f; t, t+1; \theta_t).
+\]
+
+This continuous structure allows Neural PDEs to simulate dynamic systems more effectively than traditional discrete-time networks.
+
+
+\section{Examples}
+
+
+
+
+
+\subsection{The Heat Equation}
+The heat equation is a fundamental PDE describing temperature distribution:
+\[
+\frac{\partial u}{\partial t} = \alpha \frac{\partial^2 u}{\partial x^2},
+\]
+where \( u(x,t) \) is the temperature, and \( \alpha \) is the thermal diffusivity.
+
+\subsection{Burger's Equation}
+Burger's equation models wave propagation and fluid dynamics:
+\[
+\frac{\partial u}{\partial t} + u \frac{\partial u}{\partial x} = \nu \frac{\partial^2 u}{\partial x^2},
+\]
+where \( u(x,t) \) is the solution, \( \nu \) is the viscosity coefficient, and \( x, t \) represent space and time.
+
+\section{Comparison of NN and PINN}
+To compare NNs and PINNs, we solve the heat equation and Burger's equation using both methods. The following contour plots illustrate the differences in solutions.
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{nn_solution.png}
+        \caption{NN Solution}
+        \label{fig:nn_solution}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{pinn_solution.png}
+        \caption{PINN Solution}
+        \label{fig:pinn_solution}
+    \end{subfigure}
+    \caption{Comparison of solutions for the Heat Equation. PINN captures the physics better than NN.}
+    \label{fig:comparison}
+\end{figure}
+
+\section{Evaluation of Results}
+The NN solution in Figure~\ref{fig:nn_solution} shows significant deviations from the true physics of the system, particularly near the boundaries. In contrast, the PINN solution in Figure~\ref{fig:pinn_solution} adheres closely to the governing equations, capturing boundary and initial conditions accurately.
+
+\subsection{Advantages of PINNs over NNs}
+\begin{itemize}
+    \item \textbf{Physics Consistency:} PINNs respect the governing PDEs by design.
+    \item \textbf{Better Generalization:} PINNs perform well even with limited data.
+    \item \textbf{Reduced Overfitting:} The physics loss acts as a regularizer, mitigating overfitting.
+\end{itemize}
+
+\section{Conclusion}
+The results demonstrate that PINNs significantly outperform traditional NNs in solving PDEs like the Heat Equation and Burger's Equation. This highlights their potential for applications in scientific computing, where physical laws play a crucial role.
+
+\section*{Codes}
+
+\begin{enumerate}
+    \item https://colab.research.google.com/drive/1xmV7On5GF3lf4ece_wARHPKYM_s3Wg31
+
+\end{enumerate}
+
+\section*{References}
+\begin{enumerate}
+    \item Raissi, M., et al. Physics-Informed Neural Networks.
+    \item Towards Data Science: Introduction to PINNs.
+    \item Wang, Ziyi. (2024). A numerical method to solve PDE through PINN based on ODENet. Applied and Computational Engineering. 68. 251-259. 10.54254/2755-2721/68/20241467. 
+    
+\end{enumerate}
+
+
+
+\end{document}
+
