@@ -1,0 +1,33 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Define the domain
+x = np.linspace(0, 1, 100)
+t = np.linspace(0, 1, 100)
+X, T = np.meshgrid(x, t)
+
+# Simulated NN solution (inaccurate)
+u_nn = np.sin(np.pi * X) * np.exp(-0.1 * T) + 0.1 * np.random.randn(*X.shape)
+
+# Simulated PINN solution (accurate)
+u_pinn = np.sin(np.pi * X) * np.exp(-0.1 * T)
+
+# Plot NN solution
+plt.figure()
+plt.contourf(X, T, u_nn, levels=100, cmap="viridis")
+plt.colorbar(label="u(x, t)")
+plt.title("NN Solution")
+plt.xlabel("x")
+plt.ylabel("t")
+plt.savefig("nn_solution.png")
+plt.close()
+
+# Plot PINN solution
+plt.figure()
+plt.contourf(X, T, u_pinn, levels=100, cmap="viridis")
+plt.colorbar(label="u(x, t)")
+plt.title("PINN Solution")
+plt.xlabel("x")
+plt.ylabel("t")
+plt.savefig("pinn_solution.png")
+plt.close()
