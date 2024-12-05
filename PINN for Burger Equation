@@ -1,0 +1,87 @@
+# Import necessary libraries
+import numpy as np
+import tensorflow as tf
+import matplotlib.pyplot as plt
+
+# Define the PINN class
+class PINN:
+    def __init__(self, layers, lb, ub):
+        self.lb = lb
+        self.ub = ub
+        self.layers = layers
+        self.weights, self.biases = self.initialize_NN(layers)
+        self.optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
+
+    def initialize_NN(self, layers):
+        weights = []
+        biases = []
+        for l in range(len(layers) - 1):
+            W = tf.Variable(tf.random.normal([layers[l], layers[l+1]], dtype=tf.float32), trainable=True)
+            b = tf.Variable(tf.zeros([1, layers[l+1]], dtype=tf.float32), trainable=True)
+            weights.append(W)
+            biases.append(b)
+        return weights, biases
+
+    def forward(self, X):
+        H = X
+        for l in range(len(self.weights) - 1):
+            W, b = self.weights[l], self.biases[l]
+            H = tf.nn.tanh(tf.add(tf.matmul(H, W), b))
+        W, b = self.weights[-1], self.biases[-1]
+        return tf.add(tf.matmul(H, W), b)
+
+    def loss(self, X, u_true, f_residual):
+        u_pred = self.forward(X)
+        f_pred = f_residual(X, u_pred)
+        mse_u = tf.reduce_mean(tf.square(u_true - u_pred))
+        mse_f = tf.reduce_mean(tf.square(f_pred))
+        return mse_u + mse_f
+
+    def train_step(self, X, u_true, f_residual):
+        with tf.GradientTape() as tape:
+            loss_value = self.loss(X, u_true, f_residual)
+        gradients = tape.gradient(loss_value, self.weights + self.biases)
+        self.optimizer.apply_gradients(zip(gradients, self.weights + self.biases))
+        return loss_value
+
+# Define the residual function for Burger's equation
+def burger_residual(X, u_pred):
+    x = X[:, 0:1]
+    t = X[:, 1:2]
+    u_t = tf.gradients(u_pred, t)[0]
+    u_x = tf.gradients(u_pred, x)[0]
+    u_xx = tf.gradients(u_x, x)[0]
+    nu = 0.01  # Viscosity
+    return u_t + u_pred * u_x - nu * u_xx
+
+# Define the domain bounds
+lb = np.array([-1.0, 0.0])  # Lower bounds for x and t
+ub = np.array([1.0, 1.0])   # Upper bounds for x and t
+
+# Define the neural network structure
+layers = [2, 50, 50, 50, 1]  # Input layer, hidden layers, and output layer
+pinn = PINN(layers, lb, ub)
+
+# Sample data for training
+X_train = np.random.uniform(low=lb, high=ub, size=(100, 2))
+u_train = np.sin(np.pi * X_train[:, 0:1])  # Initial condition as example
+
+# Train the PINN
+epochs = 1000
+for epoch in range(epochs):
+    loss_value = pinn.train_step(X_train, u_train, burger_residual)
+    if epoch % 100 == 0:
+        print(f"Epoch {epoch}: Loss = {loss_value.numpy()}")
+
+# Visualize the solution
+x_plot = np.linspace(lb[0], ub[0], 100)
+t_plot = np.linspace(lb[1], ub[1], 100)
+X_plot = np.array([[x, t] for x in x_plot for t in t_plot])
+u_pred = pinn.forward(X_plot).numpy()
+
+plt.imshow(u_pred.reshape(100, 100), extent=(lb[0], ub[0], lb[1], ub[1]), origin='lower', cmap='viridis')
+plt.colorbar(label='u(x, t)')
+plt.title("PINN Solution of Burger's Equation")
+plt.xlabel("x")
+plt.ylabel("t")
+plt.show()
