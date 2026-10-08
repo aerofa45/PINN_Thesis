@@ -11,6 +11,6 @@ In extension, in geophysics further exploration of PINN use is done.
 # Reports of my work are briefly available in the files: 
 
 - Bachelor's_Independent_Research_thesis_paper.pdf
--Exploratory_research_extension_of_thesis_on_PINN.pdf
+- Exploratory_research_extension_of_thesis_on_PINN.pdf
 
 
